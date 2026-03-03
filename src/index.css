@@ -1,13 +1,22 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Desktop background only — all chrome comes from React95 */
+
+/* Fix: React95 menu dropdowns are position:absolute with no z-index.
+   In a flex column the Modal.Content is painted on top of them.
+   Target the dropdown <ul> that lives inside each menu <li>. */
+[role="dialog"] > ul > li > ul {
+  z-index: 100;
+  background-color: var(--r95-color-material);
+  box-shadow: var(--r95-shadow-out);
+  min-width: 200px;
+}
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
