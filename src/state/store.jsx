@@ -58,7 +58,7 @@ Time: 11:45 AM
 const initialState = {
   canvasText: RECEIPT_TEMPLATE,
   mode: 'edit',
-  isMock: true,
+  isMock: false,
   jobCount: 0,
   log: [],
   windows: {
