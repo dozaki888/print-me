@@ -68,7 +68,7 @@ const initialState = {
     about: { open: false },
     progress: { open: false },
   },
-  printerStatus: 'mock',
+  printerStatus: 'offline',
   piAddress: 'https://api.printme.club',
   serialPort: '/dev/ttyUSB0',
   baudRate: 19200,
@@ -86,7 +86,7 @@ function reducer(state, action) {
       return {
         ...state,
         isMock: !state.isMock,
-        printerStatus: !state.isMock ? 'mock' : 'offline',
+        printerStatus: !state.isMock ? 'offline' : 'mock',
       };
     case 'ADD_LOG': {
       const ts = new Date().toLocaleTimeString('en-US', { hour12: false });
