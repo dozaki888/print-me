@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { Modal, Button, Frame, List, ProgressBar, TitleBar } from '@react95/core';
+import React, { useRef, useState } from 'react';
+import { Modal, Button, Frame, List, ProgressBar, TitleBar, Alert } from '@react95/core';
 import { Printer } from '@react95/icons';
 import { useStore } from '../state/store.jsx';
 import ReceiptCanvas from './ReceiptCanvas.jsx';
@@ -29,6 +29,7 @@ const STEPS = [
 export default function AppWindow() {
   const { state, dispatch } = useStore();
   const textareaRef = useRef(null);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   const addLog = (message, type = 'default') =>
     dispatch({ type: 'ADD_LOG', payload: { message, type } });
@@ -59,23 +60,26 @@ export default function AppWindow() {
           addLog(`[INFO] ${STEPS[i].message}`, 'info');
           await new Promise(r => setTimeout(r, 200));
         }
-        const res = await fetch(`http://${state.piAddress}/print`, {
+        const rawText = state.canvasText + '\n\n\n';
+        const base = state.piAddress.startsWith('http') ? state.piAddress : `http://${state.piAddress}`;
+        const res = await fetch(`${base}/print`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            rawText: state.canvasText,
-            escapedBuffer: Array.from(buffer),
-          }),
+          body: JSON.stringify({ rawText }),
         });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        if (!res.ok) {
+          const body = await res.text();
+          throw new Error(`Server returned ${res.status}: ${body}`);
+        }
         dispatch({ type: 'SET_PROGRESS', payload: STEPS[STEPS.length - 1] });
         dispatch({ type: 'INCREMENT_JOBS' });
         addLog('[OK] Print job sent to printer', 'ok');
         dispatch({ type: 'CLOSE_WINDOW', payload: 'progress' });
       } catch (err) {
         addLog(`[ERR] ${err.message}`, 'error');
-        dispatch({ type: 'SET_PROGRESS', payload: { percent: 0, message: `Error: ${err.message}` } });
+        dispatch({ type: 'SET_PROGRESS', payload: { percent: 0, message: '' } });
         dispatch({ type: 'CLOSE_WINDOW', payload: 'progress' });
+        setErrorMsg(err.message);
       }
     }
   }
@@ -225,7 +229,8 @@ export default function AppWindow() {
         if (state.isMock) { addLog('[INFO] Mock mode — no real status', 'info'); return; }
         dispatch({ type: 'SET_PRINTER_STATUS', payload: 'checking' });
         try {
-          const res = await fetch(`http://${state.piAddress}/status`);
+          const base = state.piAddress.startsWith('http') ? state.piAddress : `http://${state.piAddress}`;
+          const res = await fetch(`${base}/status`);
           const data = await res.json();
           dispatch({ type: 'SET_PRINTER_STATUS', payload: data.online ? 'online' : 'offline' });
           addLog(`[INFO] Printer ${data.online ? 'ONLINE' : 'OFFLINE'} on ${data.port}`, 'info');
@@ -236,6 +241,10 @@ export default function AppWindow() {
       }}>Check Printer Status</List.Item>
       <List.Item onClick={runPrintJob}>Print Now</List.Item>
       <List.Divider />
+      <List.Item onClick={() => {
+        const addr = window.prompt('Server address:', state.piAddress);
+        if (addr) dispatch({ type: 'SET_PI_ADDRESS', payload: addr });
+      }}>Set Server Address...</List.Item>
       <List.Item onClick={() => dispatch({ type: 'TOGGLE_MOCK' })}>
         Toggle Mock Mode {state.isMock ? '(ON)' : '(OFF)'}
       </List.Item>
@@ -354,6 +363,18 @@ export default function AppWindow() {
           </Frame>
         </Modal.Content>
       </Modal>
+
+      {/* Error alert */}
+      {errorMsg && (
+        <Alert
+          type="error"
+          title="Print Error"
+          message={errorMsg}
+          hasWindowButton={false}
+          buttons={[{ value: 'OK', onClick: () => setErrorMsg(null) }]}
+          buttonsAlignment="center"
+        />
+      )}
 
       {/* Progress window */}
       {state.windows.progress.open && (

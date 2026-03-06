@@ -69,7 +69,7 @@ const initialState = {
     progress: { open: false },
   },
   printerStatus: 'mock',
-  piAddress: '192.168.1.100:3000',
+  piAddress: 'https://api.printme.club',
   serialPort: '/dev/ttyUSB0',
   baudRate: 19200,
   progressPercent: 0,
