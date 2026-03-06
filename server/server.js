@@ -9,6 +9,7 @@
 
 const express = require('express');
 const cors    = require('cors');
+const path    = require('path');
 
 const USE_MOCK  = process.env.USE_MOCK === 'true';
 const PORT      = parseInt(process.env.PORT  || '3001', 10);
@@ -198,6 +199,11 @@ app.post('/print', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+// ── Static frontend (built app) ──────────────────────────────────────────────
+const DIST = path.join(__dirname, '..', 'dist');
+app.use(express.static(DIST));
+app.get('*', (req, res) => res.sendFile(path.join(DIST, 'index.html')));
 
 // ── Start ────────────────────────────────────────────────────────────────────
 if (!USE_MOCK) {

@@ -8,4 +8,13 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: process.env.PRINTER_HOST || 'http://printmaster.local:3001',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
+  },
 })
