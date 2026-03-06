@@ -1,5 +1,5 @@
 {
-  "name": "printmaster95-server",
+  "name": "printme-server",
   "version": "1.0.0",
   "description": "ESC/P print server for Epson TM-U220D via USB-serial",
   "main": "server.js",

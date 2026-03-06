@@ -254,7 +254,7 @@ export default function AppWindow() {
   const helpMenu = (
     <List>
       <List.Item onClick={() => dispatch({ type: 'OPEN_WINDOW', payload: 'about' })}>
-        About PrintMaster 95...
+        About PrintMe...
       </List.Item>
     </List>
   );
@@ -265,7 +265,7 @@ export default function AppWindow() {
     <>
       <Modal
         id="main-window"
-        title="PrintMaster 95 — Epson TM-U220D"
+        title="PrintMe — Epson TM-U220D"
         icon={<Printer variant="16x16_4" width={16} height={16} />}
         hasWindowButton={true}
         menu={[

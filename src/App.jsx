@@ -26,7 +26,7 @@ function AppContent() {
             <List.Item
               onClick={() => dispatch({ type: 'OPEN_WINDOW', payload: 'main' })}
             >
-              PrintMaster 95
+              PrintMe
             </List.Item>
             <List.Item
               onClick={() => dispatch({ type: 'OPEN_WINDOW', payload: 'log' })}

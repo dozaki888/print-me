@@ -42,7 +42,7 @@ export default function Desktop() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '12px', width: 'fit-content' }}>
         <DesktopIcon
           icon={<Printer variant="32x32_4" width={32} height={32} />}
-          label="PrintMaster 95"
+          label="PrintMe"
           onDoubleClick={() => dispatch({ type: 'OPEN_WINDOW', payload: 'main' })}
         />
         <DesktopIcon

@@ -1,5 +1,5 @@
 /**
- * PrintMaster 95 — ESC/P Print Server
+ * PrintMe — ESC/P Print Server
  * Epson TM-U220D (M188D) via USB-serial (FTDI) on Raspberry Pi
  *
  * Usage:
@@ -212,6 +212,6 @@ if (!USE_MOCK) {
 
 app.listen(PORT, () => {
   const mode = USE_MOCK ? 'MOCK (no serial writes)' : `LIVE → ${SERIAL_PATH} @ ${BAUD_RATE}`;
-  console.log(`[SERVER] PrintMaster 95 print server running on port ${PORT}`);
+  console.log(`[SERVER] PrintMe print server running on port ${PORT}`);
   console.log(`[SERVER] Mode: ${mode}`);
 });
