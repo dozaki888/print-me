@@ -1,0 +1,15 @@
+{
+  "name": "printmaster95-server",
+  "version": "1.0.0",
+  "description": "ESC/P print server for Epson TM-U220D via USB-serial",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "mock": "USE_MOCK=true node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "serialport": "^12.0.0"
+  }
+}

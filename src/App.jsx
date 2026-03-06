@@ -1,29 +1,49 @@
-import './App.css';
+import '@react95/core/GlobalStyle';
+import '@react95/core/themes/win95.css';
 
-function App() {
+import React from 'react';
+import { TaskBar, List } from '@react95/core';
+import { AppProvider, useStore } from './state/store.jsx';
+import Desktop from './components/Desktop';
+import AppWindow from './components/AppWindow';
+import LogWindow from './components/LogWindow';
+import AboutWindow from './components/AboutWindow';
+
+function AppContent() {
+  const { state, dispatch } = useStore();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src="Octocat.png" className="App-logo" alt="logo" />
-        <p>
-          GitHub Codespaces <span className="heart">♥️</span> React
-        </p>
-        <p className="small">
-          Edit <code>src/App.jsx</code> and save to reload.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </p>
-      </header>
-    </div>
+    <>
+      <Desktop />
+
+      {state.windows.main.open && <AppWindow />}
+      {state.windows.log.open && <LogWindow />}
+      {state.windows.about.open && <AboutWindow />}
+
+      <TaskBar
+        list={
+          <List>
+            <List.Item
+              onClick={() => dispatch({ type: 'OPEN_WINDOW', payload: 'main' })}
+            >
+              PrintMaster 95
+            </List.Item>
+            <List.Item
+              onClick={() => dispatch({ type: 'OPEN_WINDOW', payload: 'log' })}
+            >
+              Print Log
+            </List.Item>
+          </List>
+        }
+      />
+    </>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <AppProvider>
+      <AppContent />
+    </AppProvider>
+  );
+}
